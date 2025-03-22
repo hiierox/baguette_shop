@@ -3,7 +3,8 @@ from django.db import models
 
 class Order(models.Model):
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
-    status = models.CharField(max_length=50, choices=['В обработке', 'Отправлен', 'Доставлен'])
+    status = models.CharField(max_length=50, choices=[('pending', 'В обработке'), ('Shipped', 'Отправлен'),
+                                                      ('delivered', 'Доставлен')])
     delivery_address = models.CharField(max_length=255)
     total_price = models.DecimalField(max_digits=8, decimal_places=2)
     arrival_date = models.DateTimeField(null=True)
