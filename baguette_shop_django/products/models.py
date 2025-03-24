@@ -13,4 +13,4 @@ class Product(models.Model):
     width = models.FloatField()
     height = models.FloatField()
     image = models.ImageField(upload_to='products')
-    category_id = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
+    categories = models.ManyToManyField(Category)
