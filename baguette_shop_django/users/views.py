@@ -9,18 +9,10 @@ from .serializers import UserSerializer
 from .permissions import IsOwner
 
 
-# чисто регистрация
-class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [AllowAny]
-
-
 # по user/pk доступно (C)RUD, по user/ и users/ вызывается GET - list (user/pk GET-retrieve, роутер определяет)
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    http_method_names = ['get', 'put', 'patch', 'delete']  # убрал post на всякий
 
     def get_permission(self):
         if self.action in ['create', 'register']:
@@ -31,8 +23,8 @@ class UserViewSet(viewsets.ModelViewSet):
             return [IsAuthenticated(), IsOwner()]
         return [IsAuthenticated()]
 
-    def create(self, request, *args, **kwargs):
-        raise PermissionDenied("Use /register/ for registration")
+    def register(self, request, *args, **kwargs):
+        return Response({'detail': 'all good let it register'}, status=200)
 
     def list(self, request, *args, **kwargs):
         if request.path == '/user/':  # здесь user/ потому что без pk он тоже в list направится

@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from users.views import UserViewSet, RegisterView
+from users.views import UserViewSet
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 router = DefaultRouter()
@@ -26,7 +26,7 @@ router.register(r"", UserViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("users/", UserViewSet.as_view({'get': 'list'}), name='user_list'),
-    path("register/", RegisterView.as_view(), name="register"),
+    path("register/", UserViewSet.as_view({'post': 'create', 'get': 'register'}), name="register"),
     path('user/', include(router.urls)),
 
     # api
