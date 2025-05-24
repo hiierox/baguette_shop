@@ -1,12 +1,10 @@
-from django.shortcuts import render
-from rest_framework import viewsets, generics
-from rest_framework.decorators import action
-from rest_framework.response import Response
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.response import Response
+
 from .models import User
-from .serializers import UserSerializer
 from .permissions import IsOwner
+from .serializers import UserSerializer
 
 
 # по user/pk доступно (C)RUD, по user/ и users/ вызывается GET - list (user/pk GET-retrieve, роутер определяет)
@@ -33,4 +31,4 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"detail": "Go to the homepage: /"}, status=400)
         elif not request.user.is_staff:
             return Response({"detail": "Only staff can see this, redirect to home"}, status=400)
-        return Response(data=super().list(request, *args, **kwargs), status=200)
+        return Response(data=super().list(request, *args, **kwargs).data, status=200)
