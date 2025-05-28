@@ -8,21 +8,20 @@ from .serializers import UserSerializer
 
 
 # по user/pk доступно (C)RUD, по user/ и users/ вызывается GET - list (user/pk GET-retrieve, роутер определяет)
+# user/pk - retrieve
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    def get_permission(self):
-        if self.action in ['create', 'register']:
-            return [AllowAny]
+    http_method_names = ['put', 'patch', 'delete', 'get']
+
+    def get_permissions(self):
         if self.action == 'list':
             return [IsAdminUser()]
-        elif self.action in ['update', 'partial_update', 'destroy']:
+        elif self.action in ['update', 'partial_update', 'destroy', 'retrieve']:
             return [IsAuthenticated(), IsOwner()]
         return [IsAuthenticated()]
 
-    def register(self, request, *args, **kwargs):
-        return Response({'detail': 'all good let it register'}, status=200)
 
     def list(self, request, *args, **kwargs):
         if request.path == '/user/':  # здесь user/ потому что без pk он тоже в list направится
@@ -31,4 +30,4 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"detail": "Go to the homepage: /"}, status=400)
         elif not request.user.is_staff:
             return Response({"detail": "Only staff can see this, redirect to home"}, status=400)
-        return Response(data=super().list(request, *args, **kwargs).data, status=200)
+        return super().list(request, *args, **kwargs)  # ViewSet.list уже возвращает Response
