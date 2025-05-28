@@ -18,7 +18,9 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from users.views import UserViewSet
+from authentication.views import RegisterView, LoginView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 router = DefaultRouter()
 router.register(r"", UserViewSet)
@@ -26,10 +28,11 @@ router.register(r"", UserViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("users/", UserViewSet.as_view({'get': 'list'}), name='user_list'),
-    path("register/", UserViewSet.as_view({'post': 'create', 'get': 'register'}), name="register"),
+    path("register/", RegisterView.as_view(), name="register"),
     path('user/', include(router.urls)),
-
+    path('login/', LoginView.as_view(), name='login'),
     # api
-    path('api/schema', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger_ui')
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger_ui')
 ]
