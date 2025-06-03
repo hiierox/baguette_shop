@@ -21,16 +21,15 @@ from users.views import UserViewSet
 from authentication.views import RegisterView, LoginView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenRefreshView
-
 router = DefaultRouter()
 router.register(r"", UserViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("users/", UserViewSet.as_view({'get': 'list'}), name='user_list'),
     path("register/", RegisterView.as_view(), name="register"),
-    path('user/', include(router.urls)),
     path('login/', LoginView.as_view(), name='login'),
+    path('user/', include(router.urls)),
+    path("users/", UserViewSet.as_view({'get': 'list'}), name='user_list'),
     # api
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
