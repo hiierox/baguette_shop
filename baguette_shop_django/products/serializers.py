@@ -14,7 +14,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'price', 'material', 'width', 'height', 'image', 'categories',
+        fields = ['id', 'name', 'description', 'price', 'material', 'width', 'height', 'image', 'categories', 'stock',
                   'category_ids']
         read_only_fields = ['id']
 
@@ -34,6 +34,7 @@ class ProductSerializer(serializers.ModelSerializer):
         instance.width = validated_data.get('width', instance.width)
         instance.height = validated_data.get('height', instance.height)
         # image обновляется автоматически через validated_data
+        instance.stock = validated_data.get('stock', instance.stock)
         instance.save()
         if category_ids:
             instance.categories.set(category_ids)

@@ -7,8 +7,8 @@ from .serializers import ProductSerializer
 
 
 class StandardResultSerPagination(PageNumberPagination):
-    page_size = 20
-    page_query_param = 'page_size'
+    page_size = 10
+    page_query_param = 'page'
     max_page_size = 50
 
 
@@ -27,10 +27,11 @@ class ProductFilter(filters.Filter):
     height_gte = filters.NumberFilter(field_name='height', lookup_expr='gte')
     height_lte = filters.NumberFilter(field_name='height', lookup_expr='lte')
     categories = filters.AllValuesMultipleFilter(field_name='categories')
+    stock_gte = filters.NumberFilter(field_name='stock', lookup_expr='gte')
 
     class Meta:
         model = Product
-        fields = ['material', 'price', 'width', 'height', 'categories']
+        fields = ['material', 'price', 'width', 'height', 'categories', 'stock']
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -38,5 +39,5 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     http_method_names = ['get']
     filter_backends = [filters.DjangoFilterBackend]
-    filterset_fields = []
+    filterset_fields = ['material', 'price']
     pagination_class = StandardResultSerPagination
