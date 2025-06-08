@@ -19,17 +19,21 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from users.views import UserViewSet
 from authentication.views import RegisterView, LoginView
+from products.views import ProductViewSet
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenRefreshView
+
 router = DefaultRouter()
-router.register(r"", UserViewSet)
+router.register(r'user', UserViewSet)
+router.register(r'product', ProductViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("register/", RegisterView.as_view(), name="register"),
+    path('register/', RegisterView.as_view(), name="register"),
     path('login/', LoginView.as_view(), name='login'),
-    path('user/', include(router.urls)),
-    path("users/", UserViewSet.as_view({'get': 'list'}), name='user_list'),
+    path('', include(router.urls)),  # все маршруты приложений кроме списков - они ниже (products/, users/)
+    path('users/', UserViewSet.as_view({'get': 'list'}), name='users_list'),
+    path('products/', ProductViewSet.as_view({'get': 'list'}), name='products_list'),
     # api
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
