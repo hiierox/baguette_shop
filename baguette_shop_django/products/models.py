@@ -14,13 +14,14 @@ class Category(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название")
+    slug = models.SlugField(max_length=150, unique=True)
     description = models.TextField(verbose_name="Описание")
     price = models.DecimalField(max_digits=7, decimal_places=2, verbose_name='Цена')
     material = models.CharField(max_length=100, verbose_name='Материал')
     width = models.FloatField(verbose_name='Ширина')
     height = models.FloatField(verbose_name='Высота')
     image = models.ImageField(upload_to='products', blank=True, verbose_name='Изображение')
-    categories = models.ManyToManyField(Category, verbose_name='Категории')
+    categories = models.ManyToManyField(Category, blank=True, verbose_name='Категории')
     stock = models.PositiveIntegerField(blank=True, null=True, verbose_name='Количество на складе')
 
     class Meta:

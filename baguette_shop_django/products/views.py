@@ -16,6 +16,7 @@ class ProductFilter(filters.Filter):
     material = filters.MultipleChoiceFilter(
         field_name='material',
         lookup_expr='in',
+        # вот эта штука сразу запрос делает в бд так что если табилц еще нет то не даст сделать миграции
         choices=[(material, material) for material in
                  Product.objects.values_list('material',
                                              flat=True).distinct()]
@@ -39,8 +40,9 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     http_method_names = ['get']
     filter_backends = [filters.DjangoFilterBackend]
-    filterset_fields = ['material', 'price']
+    filterset_fields = ['material', 'price', 'width', 'height', 'categories', 'stock']
     pagination_class = StandardResultSerPagination
+    lookup_field = 'slug'
 
     def list(self, request, *args, **kwargs):
         if request.path == '/product/':  # здесь product/ потому что без pk он тоже в list направится

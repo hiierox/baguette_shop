@@ -13,5 +13,6 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'price', 'material', 'stock')
     search_fields = ('name', 'material')
     filter_horizontal = ('categories',)
-    fields = ('name', 'description', 'price', 'material', 'width', 'height', 'image', 'categories', 'stock')
+    fields = ('name', 'description', 'price', 'material', 'width', 'height', 'image', 'categories', 'stock', 'slug')
     list_editable = ('stock',)
+    prepopulated_fields = {'slug': ('name',)}
