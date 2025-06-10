@@ -14,3 +14,4 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name', 'material')
     filter_horizontal = ('categories',)
     fields = ('name', 'description', 'price', 'material', 'width', 'height', 'image', 'categories', 'stock')
+    list_editable = ('stock',)

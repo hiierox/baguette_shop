@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
-# from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
+from rest_framework.response import Response
 from .models import Product
 from .serializers import ProductSerializer
 
@@ -41,3 +41,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.DjangoFilterBackend]
     filterset_fields = ['material', 'price']
     pagination_class = StandardResultSerPagination
+
+    def list(self, request, *args, **kwargs):
+        if request.path == '/product/':  # здесь product/ потому что без pk он тоже в list направится
+            return Response({"detail": f"Redirect to {request.get_host()}/products/"}, status=400)
+        return super().list(request, *args, **kwargs)  # ViewSet.list уже возвращает Response
