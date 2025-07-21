@@ -12,13 +12,20 @@ class Order(models.Model):
                                        ('Shipped', 'Отправлен'),
                                        ('delivered', 'Доставлен')])
     delivery_address = models.CharField(max_length=255)
-    total_price = models.DecimalField(max_digits=8, decimal_places=2)
-    arrival_date = models.DateTimeField(null=True)
+    total_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    # эту дату где то потом надо будет вычислять на основе адреса и варианта доставки -
+    # подключаться к сервисам доставки?
+    # создать для этого заглушку пока
+    arrival_date = models.DateField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        self.total_price = sum(item.price * item.quantity for item in self.orderitem_set.all())
+        # сразу сохраняется Order чтобы получить pk чтобы высчитывать total price из orderitem
+        super().save(*args, **kwargs)
+        self.total_price = sum(
+            item.price * item.quantity for item in self.orderitem_set.all()
+                               ) if self.orderitem_set.exists() else 0
         super().save(*args, **kwargs)
 
 
