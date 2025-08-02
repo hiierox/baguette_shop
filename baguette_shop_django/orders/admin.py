@@ -15,9 +15,17 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
 
     def save_model(self, request, obj, form, change):
-        # Поддержка ручного редактирования
         super().save_model(request, obj, form, change)
-        # Пересчёт после изменения
-        total = sum(item.price * item.quantity for item in obj.orderitem_set.all())
-        obj.total_price = total
-        obj.save()
+        # total = sum(
+        #     item.price * item.quantity for item in obj.orderitem_set.all()
+        #             ) if obj.orderitem_set.exists() else 0
+        # obj.total_price = total
+        # obj.save(update_fields=['total_price'])
+
+    def save_formset(self, request, form, formset, change):
+        super().save_formset(request, form, formset, change)
+        # Пересчёт total_price после сохранения OrderItem
+        total = sum(item.price * item.quantity for item in
+                    form.instance.orderitem_set.all()) if form.instance.orderitem_set.exists() else 0
+        form.instance.total_price = total
+        form.instance.save(update_fields=['total_price'])

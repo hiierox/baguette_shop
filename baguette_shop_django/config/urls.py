@@ -32,6 +32,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name="register"),
     path('login/', LoginView.as_view(), name='login'),
     path('', include(router.urls)),  # все маршруты приложений кроме списков - они ниже (products/, users/)
+    path('', include('orders.urls')),
     path('users/', UserViewSet.as_view({'get': 'list'}), name='users_list'),
     path('products/', ProductViewSet.as_view({'get': 'list'}), name='products_list'),
     # api
